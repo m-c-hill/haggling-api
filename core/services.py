@@ -1,4 +1,4 @@
-from models.database import Offer, Action
+from core.database import Action, Offer
 
 
 # Turn this into a wrapper?
