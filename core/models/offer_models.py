@@ -28,15 +28,24 @@ class Offer(Base):
     __tablename__ = "offer"
 
     id = Column(Integer, primary_key=True, index=True)
+
+    # Offer information
     offer_id = Column(Integer)
     version_id = Column(Integer, default=1)
     product = Column(String)
     quantity = Column(Integer)
     price = Column(Float)
+
+    # Action logged
     action_id = Column(Integer, ForeignKey("user.id"))
-    seller_id = Column(Integer, ForeignKey("user.id"))
+    action = Column(Enum(OfferActionEnum))
+
+    # Buyer information
     buyer_id = Column(Integer, ForeignKey("user.id"))
-    seller_state = Column(Enum(OfferStatesEnum))
     buyer_state = Column(Enum(OfferStatesEnum))
-    seller_private_data = Column(JSON)
     buyer_private_data = Column(JSON)
+
+    # Seller information
+    seller_id = Column(Integer, ForeignKey("user.id"))
+    seller_state = Column(Enum(OfferStatesEnum))
+    seller_private_data = Column(JSON)

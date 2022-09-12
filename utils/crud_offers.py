@@ -10,23 +10,44 @@ def get_offer(db: Session, offer_id: int):
     )
 
 
+def create_offer(db: Session, offer: offer_schema.OfferCreate):
+    db_offer = offer_models.Offer(
+        offer_id = get_new_offer_id(db),
+        version_id = 1,
+        product = offer.product,
+        quantity = offer.quantity,
+        price = offer.price,
+        action_id = offer.buyer_id,
+        action = offer_models.OfferActionEnum("Submit"),
+        buyer_id = offer.buyer_id,
+        buyer_state = offer_models.OfferStatesEnum("AwaitingTheirAcceptance"),
+        buyer_private_data = offer.buyer_private_data,
+        seller_id = offer.seller_id,
+        seller_state = offer_models.OfferStatesEnum("AwaitingMyAcceptance"),
+        seller_private_data = {}
+    )
+    db.add(db_offer)
+    db.commit()
+    db.refresh(db_offer)
+    return db_offer
+
+
 def get_offer_history():
     return
 
 
 def get_offers_for_user(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(offer_models.Offer).offset(skip).limit(limit).all()
+    return
 
 
 def get_active_offers_for_user():
     return
 
-def create_offer(db: Session, user: offer_schema.OfferCreate):
-    db_user = offer_models.Offer(username=user.username)
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-    return db_user
 
 def action_offer():
     return
+
+
+# TODO
+def get_new_offer_id(db: Session):
+    return 1
