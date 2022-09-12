@@ -1,5 +1,6 @@
-from fastapi import Path, status, Query, APIRouter
+from fastapi import APIRouter, Path, Query, status
 
+from core.database import get_db
 
 offer_router = APIRouter(tags=["offers"])
 

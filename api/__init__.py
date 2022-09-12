@@ -2,27 +2,22 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-# from tortoise.contrib.fastapi import register_tortoise
+from core import models
+from core.database import SessionLocal, engine
+from core.schemas.user_schema import UserCreate
+from utils.crud_users import create_user
 
 from .v1 import v1_router
 
 
 def create_app():
-    app = FastAPI(title="apiAutoTestWeb") #description=core.setting.DESC)
+    models.Base.metadata.create_all(bind=engine)
 
-    # register_tortoise(
-    #     app,
-    #     db_url="sqlite://db.sqlite3",
-    #     modules={"models": ["db.models"]},
-    #     # # 生成表
-    #     generate_schemas=True,
-    #     # # 使用异常，当无数据是自动返回
-    #     # add_exception_handlers=True,
-    # )
+    app = FastAPI(title="haggling")  # description=core.setting.DESC)
 
     app.add_middleware(
         CORSMiddleware,
-        allow_origins="*",  # core.setting.ORIGINS,  #TODO
+        allow_origins=["*"],  # core.setting.ORIGINS,  #TODO
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
@@ -30,8 +25,13 @@ def create_app():
 
     app.include_router(v1_router)
 
-    @app.get("/")
-    def home():
-        return "Hello"
+    @app.on_event("startup")
+    def startup_populate_db():
+        db = SessionLocal()
+
+        if db.query(models.User).count() == 0:
+            users = [UserCreate(username="batman"), UserCreate(username="superman")]
+            for user in users:
+                create_user(db, user)
 
     return app
