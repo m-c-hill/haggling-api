@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Path, Query, status
 
 from core.database import get_db
+from core.schemas import error_schema, offer_schema, user_schema
 
 offer_router = APIRouter(tags=["offers"])
 
@@ -8,7 +9,9 @@ offer_router = APIRouter(tags=["offers"])
 @offer_router.post(
     "/offers",
     status_code=status.HTTP_201_CREATED,
-    summary="",
+    response_model=offer_schema.OfferResponse,
+    responses={404: {"model": error_schema.Response404}},
+    tags=["offers"],
 )
 def submit_offer():
     """

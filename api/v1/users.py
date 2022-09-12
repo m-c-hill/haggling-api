@@ -41,7 +41,7 @@ async def get_user_by_id(
     response_model=user_schema.UserResponse,
     tags=["users"],
 )
-def create_user(user: user_schema.UserCreate, db: Session = Depends(get_db)):
+async def create_user(user: user_schema.UserCreate, db: Session = Depends(get_db)):
     """
     Create a new user by submitted a unique username that has not been previously
     registered.

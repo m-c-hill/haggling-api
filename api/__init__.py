@@ -2,8 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from core import models
 from core.database import SessionLocal, engine
+from core.models import user_models
 from core.schemas.user_schema import UserCreate
 from utils.crud_users import create_user
 
@@ -11,7 +11,7 @@ from .v1 import v1_router
 
 
 def create_app():
-    models.Base.metadata.create_all(bind=engine)
+    user_models.Base.metadata.create_all(bind=engine)
 
     app = FastAPI(title="haggling")  # description=core.setting.DESC)
 
@@ -29,7 +29,7 @@ def create_app():
     def startup_populate_db():
         db = SessionLocal()
 
-        if db.query(models.User).count() == 0:
+        if db.query(user_models.User).count() == 0:
             users = [UserCreate(username="batman"), UserCreate(username="superman")]
             for user in users:
                 create_user(db, user)
