@@ -57,20 +57,24 @@ class OfferHistoryResponse(BaseModel):
 #  Response Schemas
 # ==================
 
+
 class OfferResponse(BaseModel):
     success: bool
     created: int
     offer: Offer
 
- 
+
 class OfferCreateResponse(OfferResponse):
     pass
+
 
 class OfferAcceptResponse(OfferResponse):
     pass
 
+
 class OfferCancelResponse(OfferResponse):
     pass
+
 
 class OfferWithdrawResponse(OfferResponse):
     pass

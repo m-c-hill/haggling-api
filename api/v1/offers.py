@@ -68,7 +68,9 @@ async def cancel_offer(
     Cancel an offer
     """
     offer = crud_offers.cancel_offer(db, user_id, offer_id)
-    return offer_schema.OfferCancelResponse(success=True, offer_id=offer.id, offer=offer)
+    return offer_schema.OfferCancelResponse(
+        success=True, offer_id=offer.id, offer=offer
+    )
 
 
 @offer_router.post(
@@ -86,8 +88,9 @@ async def withdraw_offer(
     Withdraw an offer
     """
     offer = crud_offers.withdraw_offer(db, user_id, offer_id)
-    return
-
+    return offer_schema.OfferWithdrawResponse(
+        success=True, offer_id=offer.id, offer=offer
+    )
 
 
 # =================

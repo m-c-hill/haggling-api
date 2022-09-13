@@ -87,6 +87,42 @@ def cancel_offer(db: Session, user_id: int, offer_id: int) -> offer_models.Offer
     return db_offer
 
 
+def withdraw_offer(db: Session, user_id: int, offer_id: int) -> offer_models.Offer:
+    offer_item = get_latest_offer_item(db, offer_id)
+    check_action_allowed(offer_item, offer_models.OfferActionEnum("Accept"), user_id)
+
+    buyer_state = (
+        offer_models.OfferStatesEnum("WithdrawnByMe")
+        if user_id == offer_item.buyer_id
+        else offer_models.OfferStatesEnum("WithdrawnByThem")
+    )
+    seller_state = (
+        offer_models.OfferStatesEnum("WithdrawnByMe")
+        if user_id == offer_item.seller_id
+        else offer_models.OfferStatesEnum("WithdrawnByThem")
+    )
+
+    db_offer = offer_models.Offer(
+        offer_id=offer_item.offer_id,
+        version_id=offer_item.version_id + 1,
+        product=offer_item.product,
+        quantity=offer_item.quantity,
+        price=offer_item.price,
+        action_id=user_id,
+        action=offer_models.OfferActionEnum("Withdraw"),
+        buyer_id=offer_item.buyer_id,
+        buyer_state=buyer_state,
+        buyer_private_data=offer_item.buyer_private_data,
+        seller_id=offer_item.seller_id,
+        seller_state=seller_state,
+        seller_private_data=offer_item.seller_private_data,
+    )
+    db.add(db_offer)
+    db.commit()
+    db.refresh(db_offer)
+    return db_offer
+
+
 # =================
 #  In progress
 # =================
