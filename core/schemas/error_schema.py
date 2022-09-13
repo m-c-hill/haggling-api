@@ -7,6 +7,11 @@ class Response(BaseModel):
     message: str
 
 
+# TODO
+class Response400(Response):
+    pass
+
+
 class Response404(Response):
     error = 404
     success = False

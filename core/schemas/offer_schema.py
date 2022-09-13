@@ -1,8 +1,13 @@
+from typing import List
+
 from pydantic import BaseModel
+
 from core.models import offer_models
 
 
 class OfferBase(BaseModel):
+    offer_id: int
+    version_id: int
     product: str
     quantity: int
     price: float
@@ -10,12 +15,12 @@ class OfferBase(BaseModel):
     action: offer_models.OfferActionEnum
     buyer_id: int
     buyer_state: offer_models.OfferStatesEnum
+    buyer_private_data: dict
     seller_id: int
     seller_state: offer_models.OfferStatesEnum
     seller_private_data: dict
-    buyer_private_data: dict
 
-    class Config:  
+    class Config:
         use_enum_values = True
 
 
@@ -37,8 +42,35 @@ class Offer(OfferBase):
         orm_mode = True
 
 
-# class OfferResponse(BaseModel):
-#     success: bool
-#     offer_id: int
-#     user: Offer
-#     total_offers: int
+class OfferHistoryItem(BaseModel):
+    pass
+
+
+class OfferHistoryResponse(BaseModel):
+    success: bool
+    offer_id: int
+    offer_history: List[OfferHistoryItem]
+    offer_count: int
+
+
+# ==================
+#  Response Schemas
+# ==================
+
+class OfferResponse(BaseModel):
+    success: bool
+    created: int
+    offer: Offer
+
+ 
+class OfferCreateResponse(OfferResponse):
+    pass
+
+class OfferAcceptResponse(OfferResponse):
+    pass
+
+class OfferCancelResponse(OfferResponse):
+    pass
+
+class OfferWithdrawResponse(OfferResponse):
+    pass

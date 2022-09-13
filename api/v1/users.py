@@ -56,13 +56,13 @@ async def create_user(user: user_schema.UserCreate, db: Session = Depends(get_db
     return user_schema.UserResponse(success=True, user=new_user)
 
 
-@user_router.get("/users/{id}/offers", tags=["users"])
-def get_user_offers(
-    id: int = Path(title="The ID of the User"),
-    active: Union[bool, None] = Query(default=None),
-):
-    """
-    Retrieve offers a user is involved in.
-    """
-    # TODO
-    return
+# @user_router.get("/users/{id}/offers", tags=["users"])
+# def get_user_offers(
+#     id: int = Path(title="The ID of the User"),
+#     active: Union[bool, None] = Query(default=None),
+# ):
+#     """
+#     Retrieve offers a user is involved in.
+#     """
+#     # TODO
+#     return
